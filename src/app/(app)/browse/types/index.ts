@@ -1,9 +1,9 @@
 export interface BrowserQuery {
   page: number;
   limit: number;
-  minPrice: number;
-  extension: string;
-  search: string;
+  minPrice?: number;
+  extension?: string;
+  search?: string;
 }
 
 export interface AssetCreator {
