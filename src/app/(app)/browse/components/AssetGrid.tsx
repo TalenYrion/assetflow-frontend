@@ -109,7 +109,7 @@ export function AssetGrid({
               </Link>
 
               {/* 💡 MODULAR SWAP: Clean call to independent authentication gateway */}
-              <PurchaseButton asset={asset} onPurchase={onPurchase} />
+	      <PurchaseButton asset={asset} />
             </div>
           </div>
         ))}
