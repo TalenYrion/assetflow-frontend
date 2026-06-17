@@ -1,4 +1,4 @@
-import { StripePortalType, UpdatePasswordInput, UpdateProfileInput, UpgradeToSellerReponce, UserProfileResponse } from "@/app/(app)/(protected)/dashboard/sittings/types"
+import { StripePortalType, UpdatePasswordInput, UpdateProfileInput, UpgradeToSellerReponce, UserProfileResponse } from "@/app/(app)/(protected)/dashboard/settings/types"
 import apiClient from "../api-client"
 
 
