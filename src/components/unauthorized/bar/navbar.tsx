@@ -248,7 +248,7 @@ export default function Navbar() {
 
                 <div className="flex flex-col space-y-3">
                   <Link
-                    href="/assets"
+                    href="/browse"
                     className="block rounded-xl px-4 py-2.5 text-base font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-900"
                   >
                     Browse Marketplace
