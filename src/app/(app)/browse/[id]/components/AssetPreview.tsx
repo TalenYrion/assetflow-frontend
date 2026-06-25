@@ -6,7 +6,6 @@ import { FileText } from 'lucide-react';
 export function AssetPreview({ asset }: { asset: any }) {
   const ext = asset.fileExtension?.toLowerCase() || '';
   const isVideo = ['mp4', 'webm', 'ogg', 'mov'].includes(ext);
-  const isImage = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'svg'].includes(ext);
 
   return (
     <div className="relative w-full aspect-video rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 flex items-center justify-center overflow-hidden shadow-xs">
@@ -22,12 +21,6 @@ export function AssetPreview({ asset }: { asset: any }) {
           src={asset.thumbnail.url}
           alt={asset.title}
           className="w-full h-full object-cover"
-        />
-      ) : isImage ? (
-        <img
-          src={asset.storagePath}
-          alt={asset.title}
-          className="w-full h-full object-contain"
         />
       ) : (
         /* Fallback for documents, zip files, 3D assets, etc. that somehow don't have a thumbnail */
