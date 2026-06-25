@@ -41,6 +41,11 @@ export const dashboardApi = {
     formData.append('price', input.price);
     formData.append('file', input.file);
 
+    // Append the optional thumbnail file if it was provided by the user
+    if (input.thumbnailFile) {
+      formData.append('thumbnailFile', input.thumbnailFile);
+    }
+
     const responce = await apiClient.post('asset', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -48,7 +53,6 @@ export const dashboardApi = {
     });
     return responce.data;
   },
-
   getSellerAssets: async (
     page: number = 1,
     limit: number = 10,
@@ -94,16 +98,8 @@ export const dashboardApi = {
     const responce = await apiClient.get(`/asset/${assetId}`);
     return responce.data;
   },
-downlaodAsset: async(assetId: number): Promise<{downloadUrl: string}> => {
-	const response= await apiClient.get(`asset/${assetId}/download`)
-	return response.data
-}
-
+  downlaodAsset: async (assetId: number): Promise<{ downloadUrl: string }> => {
+    const response = await apiClient.get(`asset/${assetId}/download`);
+    return response.data;
+  },
 };
-
-
-
-
-
-
-

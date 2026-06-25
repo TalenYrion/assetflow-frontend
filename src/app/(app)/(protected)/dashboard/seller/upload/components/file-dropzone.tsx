@@ -7,9 +7,19 @@ interface FileDropzoneProps {
   value: File | null;
   onChange: (file: File | null) => void;
   error?: string;
+  label?: string;
+  description?: string;
+  accept?: string;
 }
 
-export function FileDropzone({ value, onChange, error }: FileDropzoneProps) {
+export function FileDropzone({
+  value,
+  onChange,
+  error,
+  label = 'Asset Package File',
+  description = 'Supports images, 3D files, ZIPs up to 100MB',
+  accept,
+}: FileDropzoneProps) {
   const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
@@ -49,7 +59,7 @@ export function FileDropzone({ value, onChange, error }: FileDropzoneProps) {
   return (
     <div className="space-y-2">
       <label className="text-xs font-semibold text-neutral-700 dark:text-neutral-300">
-        Asset Package File
+        {label}
       </label>
 
       {!value ? (
@@ -68,6 +78,7 @@ export function FileDropzone({ value, onChange, error }: FileDropzoneProps) {
             type="file"
             className="hidden"
             onChange={handleFileChange}
+            accept={accept}
           />
           <div className="h-10 w-10 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-100 dark:border-neutral-800 flex items-center justify-center text-neutral-500 shadow-sm mb-3">
             <UploadCloud className="h-5 w-5" />
@@ -76,9 +87,7 @@ export function FileDropzone({ value, onChange, error }: FileDropzoneProps) {
             Drag & drop your file here, or{' '}
             <span className="text-blue-500 hover:underline">browse</span>
           </p>
-          <p className="text-xs text-neutral-400 mt-1">
-            Supports images, 3D files, ZIPs up to 100MB
-          </p>
+          <p className="text-xs text-neutral-400 mt-1">{description}</p>
         </div>
       ) : (
         <div className="border border-neutral-200 dark:border-neutral-800 rounded-2xl p-4 bg-white dark:bg-neutral-900/40 flex items-center justify-between gap-4">
@@ -114,7 +123,10 @@ export function FileDropzone({ value, onChange, error }: FileDropzoneProps) {
 
           <button
             type="button"
-            onClick={() => onChange(null)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onChange(null);
+            }}
             className="h-8 w-8 rounded-lg border border-neutral-200 hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-900 flex items-center justify-center text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200 transition-colors"
           >
             <X className="h-4 w-4" />

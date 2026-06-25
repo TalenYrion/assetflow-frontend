@@ -2,6 +2,8 @@ import * as z from 'zod';
 
 // Max file size threshold (e.g., 100MB)
 const MAX_FILE_SIZE = 100 * 1024 * 1024;
+// Max thumbnail size threshold (e.g., 5MB)
+const MAX_THUMBNAIL_SIZE = 5 * 1024 * 1024;
 
 export const assetSchema = z.object({
   title: z
@@ -29,6 +31,19 @@ export const assetSchema = z.object({
     .refine(
       (file) => file.size <= MAX_FILE_SIZE,
       'File size cannot exceed 100MB',
+    ),
+
+  // Optional thumbnail file validation
+  thumbnailFile: z
+    .instanceof(File)
+    .optional()
+    .refine(
+      (file) => !file || file.size <= MAX_THUMBNAIL_SIZE,
+      'Thumbnail size cannot exceed 5MB',
+    )
+    .refine(
+      (file) => !file || file.type.startsWith('image/'),
+      'Thumbnail must be an image file',
     ),
 });
 

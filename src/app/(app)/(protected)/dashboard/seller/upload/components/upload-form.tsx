@@ -2,10 +2,10 @@
 
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { assetSchema, AssetFormValues } from '../../../schema/assetSchema';
-import { useAssetCreate } from '../../../hooks/useAssetCreate';
 import { FileDropzone } from './file-dropzone';
 import { DollarSign } from 'lucide-react';
+import { AssetFormValues, assetSchema } from '../../../schema/assetSchema';
+import { useAssetCreate } from '../../../hooks/useAssetCreate';
 
 export function UploadAssetForm() {
   const { mutate: createAsset, isPending } = useAssetCreate();
@@ -22,6 +22,7 @@ export function UploadAssetForm() {
       description: '',
       price: '',
       file: undefined,
+      thumbnailFile: undefined,
     },
   });
 
@@ -30,7 +31,7 @@ export function UploadAssetForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 max-w-2xl">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 max-w-4xl">
       {/* 1. Asset Title */}
       <div className="space-y-1.5">
         <label className="text-xs font-semibold text-neutral-700 dark:text-neutral-300">
@@ -68,7 +69,7 @@ export function UploadAssetForm() {
       </div>
 
       {/* 3. Price Allocation Input */}
-      <div className="space-y-1.5">
+      <div className="space-y-1.5 max-w-sm">
         <label className="text-xs font-semibold text-neutral-700 dark:text-neutral-300">
           Price (USD)
         </label>
@@ -91,19 +92,39 @@ export function UploadAssetForm() {
       </div>
 
       {/* 4. Dropzone File Uploader Wrapper */}
-      <Controller
-        name="file"
-        control={control}
-        render={({ field }) => (
-          <FileDropzone
-            value={field.value}
-            onChange={field.onChange}
-            error={errors.file?.message}
-          />
-        )}
-      />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Controller
+          name="file"
+          control={control}
+          render={({ field }) => (
+            <FileDropzone
+              value={field.value ?? null}
+              onChange={field.onChange}
+              error={errors.file?.message}
+              label="Asset Package File"
+              description="Supports images, 3D files, ZIPs up to 100MB"
+            />
+          )}
+        />
 
-      {/* 5. Execution Button */}
+        {/* 5. Custom Cover Image (Optional) */}
+        <Controller
+          name="thumbnailFile"
+          control={control}
+          render={({ field }) => (
+            <FileDropzone
+              value={field.value ?? null}
+              onChange={field.onChange}
+              error={errors.thumbnailFile?.message}
+              label="Custom Cover Image (Optional)"
+              description="Upload a 16:9 image. If empty, we'll auto-generate one."
+              accept="image/*"
+            />
+          )}
+        />
+      </div>
+
+      {/* 6. Execution Button */}
       <button
         type="submit"
         disabled={isPending}

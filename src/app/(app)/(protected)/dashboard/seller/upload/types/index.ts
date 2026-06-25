@@ -23,4 +23,5 @@ export interface CreateAssetInput {
   description: string;
   price: string;
   file: File;
+  thumbnailFile?: File; // <-- Add this optional property
 }
