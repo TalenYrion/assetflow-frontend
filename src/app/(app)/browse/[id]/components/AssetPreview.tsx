@@ -1,10 +1,10 @@
 'use client';
 
-import { FileText, Film, Image as ImageIcon } from 'lucide-react';
-import { AssetDetailResponse } from '../../types';
+import { FileText } from 'lucide-react';
+// import { AssetDetailResponse } from '../../types';
 
-export function AssetPreview({ asset }: { asset: AssetDetailResponse }) {
-  const ext = asset.fileExtension.toLowerCase();
+export function AssetPreview({ asset }: { asset: any }) {
+  const ext = asset.fileExtension?.toLowerCase() || '';
   const isVideo = ['mp4', 'webm', 'ogg', 'mov'].includes(ext);
   const isImage = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'svg'].includes(ext);
 
@@ -17,14 +17,20 @@ export function AssetPreview({ asset }: { asset: AssetDetailResponse }) {
           controls
           className="w-full h-full object-contain"
         />
+      ) : asset.thumbnail?.url ? (
+        <img
+          src={asset.thumbnail.url}
+          alt={asset.title}
+          className="w-full h-full object-cover"
+        />
       ) : isImage ? (
         <img
-          src={asset.thumbnail?.url || asset.storagePath}
+          src={asset.storagePath}
           alt={asset.title}
           className="w-full h-full object-contain"
         />
       ) : (
-        /* Fallback for documents, zip files, 3D assets, etc. */
+        /* Fallback for documents, zip files, 3D assets, etc. that somehow don't have a thumbnail */
         <div className="flex flex-col items-center gap-3 text-neutral-400 dark:text-neutral-500">
           <FileText className="h-16 w-16 stroke-[1.25]" />
           <div className="text-center">
