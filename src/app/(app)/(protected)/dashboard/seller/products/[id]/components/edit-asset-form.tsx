@@ -69,7 +69,7 @@ export function EditAssetForm({
       // @ts-ignore - explicitly clearing file
       setValue('thumbnailFile', undefined, { shouldValidate: true });
     }
-  };
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">

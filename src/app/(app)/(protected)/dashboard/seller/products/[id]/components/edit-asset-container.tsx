@@ -36,7 +36,7 @@ export function EditAssetContainer({ assetId }: { assetId: number }) {
         title: asset.title,
         description: asset.description,
         price: asset.price,
-        thumbnailUrl: asset.thumbnailUrl ?? asset.thumbnailUrl ?? null,
+        thumbnailUrl: asset.thumbnail?.url ?? asset.thumbnail.url ?? null,
       }}
       isSubmitting={isUpdating}
       onSubmit={(formData) => updateAsset({ assetId, data: formData })}

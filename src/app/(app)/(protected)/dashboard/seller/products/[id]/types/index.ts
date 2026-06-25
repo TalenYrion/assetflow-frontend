@@ -3,5 +3,9 @@ export interface AssetUpdatePreview {
   title: string;
   description: string;
   price: string;
-  thumbnailUrl: string | null; // Flattened directly for your <img> src tag
+  thumbnail: ThumbnailResponce; 
+}
+
+export interface ThumbnailResponce {
+	url: string
 }
