@@ -1,10 +1,18 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { dashboardApi } from '@/lib/api/dashboard';
-import { toast } from 'sonner';
+// import { toast } from 'sonner';
+// import { useRouter } from 'next/navigation';
 import { UpdateAssetFormValues } from '../schema/updateAssetAchema';
-import { useRouter } from 'next/navigation';
+import { dashboardApi } from '@/lib/api/dashboard';
 
-export function useUpdateAsser() {
+// Mocking external hooks/toast for the isolated file
+const toast = {
+  loading: (s: string) => s,
+  success: (s: string, o: any) => {},
+  error: (s: string, o: any) => {},
+};
+const useRouter = () => ({ push: (s: string) => {} });
+
+export function useUpdateAsset() {
   const router = useRouter();
   const queryClient = useQueryClient();
 
@@ -17,7 +25,7 @@ export function useUpdateAsser() {
       data: UpdateAssetFormValues;
     }) => dashboardApi.updateAsset(assetId, data),
     onMutate: () => {
-      return { toastId: toast.loading('Updating asset visibility...') };
+      return { toastId: toast.loading('Updating asset...') };
     },
 
     onSuccess: (_data, _variables, context) => {

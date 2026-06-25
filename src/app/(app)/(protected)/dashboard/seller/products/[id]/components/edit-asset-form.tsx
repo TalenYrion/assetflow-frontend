@@ -7,8 +7,15 @@ import {
   updateAssetSchema,
   UpdateAssetFormValues,
 } from '../schema/updateAssetAchema';
-import { AssetUpdatePreview } from '../types/index'; // Use the display preview interface
 import { Upload, Loader2, ImageIcon } from 'lucide-react';
+
+interface AssetUpdatePreview {
+  id: number;
+  title: string;
+  description: string;
+  price: string;
+  thumbnailUrl: string | null;
+}
 
 interface EditAssetFormProps {
   asset: AssetUpdatePreview;
@@ -22,6 +29,9 @@ export function EditAssetForm({
   onSubmit,
 }: EditAssetFormProps) {
   const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
+  const [selectedThumbName, setSelectedThumbName] = useState<string | null>(
+    null,
+  );
 
   const {
     register,
@@ -42,6 +52,22 @@ export function EditAssetForm({
     if (file) {
       setSelectedFileName(file.name);
       setValue('file', file, { shouldValidate: true });
+    } else {
+      setSelectedFileName(null);
+      // @ts-ignore - explicitly clearing file
+      setValue('file', undefined, { shouldValidate: true });
+    }
+  };
+
+  const handleThumbChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedThumbName(file.name);
+      setValue('thumbnailFile', file, { shouldValidate: true });
+    } else {
+      setSelectedThumbName(null);
+      // @ts-ignore - explicitly clearing file
+      setValue('thumbnailFile', undefined, { shouldValidate: true });
     }
   };
 
@@ -116,31 +142,62 @@ export function EditAssetForm({
         )}
       </div>
 
-      {/* 3. Optional Binary File Dropzone */}
-      <div className="space-y-1">
-        <label className="text-xs font-semibold text-neutral-700 dark:text-neutral-300">
-          Replace Binary Package{' '}
-          <span className="font-normal text-neutral-400">(Optional)</span>
-        </label>
-        <div className="relative flex min-h-[120px] cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-neutral-200 bg-neutral-50/50 p-4 text-center transition hover:bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-900/10 dark:hover:bg-neutral-900/30">
-          <input
-            type="file"
-            onChange={handleFileChange}
-            className="absolute inset-0 z-10 cursor-pointer opacity-0"
-          />
-          <Upload className="h-5 w-5 text-neutral-400 mb-2" />
-          <p className="text-xs font-medium text-neutral-700 dark:text-neutral-300">
-            {selectedFileName
-              ? `Selected: ${selectedFileName}`
-              : 'Drop new asset file here, or click to browse'}
-          </p>
-          <p className="mt-1 text-[10px] text-neutral-400">
-            Leave blank to retain current production file cluster
-          </p>
+      {/* 3. Optional Binary File Dropzones */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="space-y-1">
+          <label className="text-xs font-semibold text-neutral-700 dark:text-neutral-300">
+            Replace Binary Package{' '}
+            <span className="font-normal text-neutral-400">(Optional)</span>
+          </label>
+          <div className="relative flex min-h-[120px] cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-neutral-200 bg-neutral-50/50 p-4 text-center transition hover:bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-900/10 dark:hover:bg-neutral-900/30">
+            <input
+              type="file"
+              onChange={handleFileChange}
+              className="absolute inset-0 z-10 cursor-pointer opacity-0"
+            />
+            <Upload className="h-5 w-5 text-neutral-400 mb-2" />
+            <p className="text-xs font-medium text-neutral-700 dark:text-neutral-300">
+              {selectedFileName
+                ? `Selected: ${selectedFileName}`
+                : 'Drop new asset file here, or click to browse'}
+            </p>
+            <p className="mt-1 text-[10px] text-neutral-400">
+              Leave blank to retain current production file cluster
+            </p>
+          </div>
+          {errors.file && (
+            <p className="text-xs text-red-500">{errors.file.message}</p>
+          )}
         </div>
-        {errors.file && (
-          <p className="text-xs text-red-500">{errors.file.message}</p>
-        )}
+
+        <div className="space-y-1">
+          <label className="text-xs font-semibold text-neutral-700 dark:text-neutral-300">
+            Replace Cover Image{' '}
+            <span className="font-normal text-neutral-400">(Optional)</span>
+          </label>
+          <div className="relative flex min-h-[120px] cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-neutral-200 bg-neutral-50/50 p-4 text-center transition hover:bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-900/10 dark:hover:bg-neutral-900/30">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleThumbChange}
+              className="absolute inset-0 z-10 cursor-pointer opacity-0"
+            />
+            <ImageIcon className="h-5 w-5 text-neutral-400 mb-2" />
+            <p className="text-xs font-medium text-neutral-700 dark:text-neutral-300">
+              {selectedThumbName
+                ? `Selected: ${selectedThumbName}`
+                : 'Drop new thumbnail here, or click to browse'}
+            </p>
+            <p className="mt-1 text-[10px] text-neutral-400">
+              16:9 Image. Leave blank to retain current thumbnail
+            </p>
+          </div>
+          {errors.thumbnailFile && (
+            <p className="text-xs text-red-500">
+              {errors.thumbnailFile.message}
+            </p>
+          )}
+        </div>
       </div>
 
       {/* 4. Action Engine Footer */}

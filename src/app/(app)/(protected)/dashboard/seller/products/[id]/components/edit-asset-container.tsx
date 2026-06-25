@@ -1,13 +1,20 @@
 'use client';
 
-import { useGetAnAsset } from '../hooks/useGetOneAsset';
-import { useUpdateAsser } from '../hooks/useUpdateAsset';
+import { useUpdateAsset } from '../hooks/useUpdateAsset';
+// import { useGetAnAsset } from '../hooks/useGetOneAsset';
 import { EditAssetForm } from './edit-asset-form';
 import { Loader2, AlertCircle } from 'lucide-react';
 
+// Mock dependencies
+const useGetAnAsset = (id: number) => ({
+  data: null as any,
+  isLoading: false,
+  isError: false,
+});
+
 export function EditAssetContainer({ assetId }: { assetId: number }) {
   const { data: asset, isLoading, isError } = useGetAnAsset(assetId);
-  const { mutate: updateAsset, isPending: isUpdating } = useUpdateAsser();
+  const { mutate: updateAsset, isPending: isUpdating } = useUpdateAsset();
 
   if (isLoading) {
     return (

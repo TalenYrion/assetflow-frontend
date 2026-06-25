@@ -84,6 +84,8 @@ export const dashboardApi = {
     if (input.description) formData.append('description', input.description);
     if (input.price) formData.append('price', input.price);
     if (input.file) formData.append('file', input.file);
+    if (input.thumbnailFile)
+      formData.append('thumbnailFile', input.thumbnailFile);
 
     const responce = await apiClient.patch(`asset/${assetId}`, formData, {
       headers: {
