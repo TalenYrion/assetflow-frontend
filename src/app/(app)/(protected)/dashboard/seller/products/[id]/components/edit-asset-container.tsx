@@ -1,16 +1,9 @@
 'use client';
 
 import { useUpdateAsset } from '../hooks/useUpdateAsset';
-// import { useGetAnAsset } from '../hooks/useGetOneAsset';
+import { useGetAnAsset } from '../hooks/useGetOneAsset';
 import { EditAssetForm } from './edit-asset-form';
 import { Loader2, AlertCircle } from 'lucide-react';
-
-// Mock dependencies
-const useGetAnAsset = (id: number) => ({
-  data: null as any,
-  isLoading: false,
-  isError: false,
-});
 
 export function EditAssetContainer({ assetId }: { assetId: number }) {
   const { data: asset, isLoading, isError } = useGetAnAsset(assetId);
@@ -43,7 +36,7 @@ export function EditAssetContainer({ assetId }: { assetId: number }) {
         title: asset.title,
         description: asset.description,
         price: asset.price,
-        thumbnailUrl: asset.thumbnailUrl ?? null,
+        thumbnailUrl: asset.thumbnailUrl ?? asset.thumbnailUrl ?? null,
       }}
       isSubmitting={isUpdating}
       onSubmit={(formData) => updateAsset({ assetId, data: formData })}
