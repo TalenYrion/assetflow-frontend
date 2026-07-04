@@ -1,10 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Eye } from 'lucide-react';
 
 import { loginSchema, LoginInput } from '../schemas/loginSchema';
 import { useLogin } from '../hooks/useLogin';
@@ -15,8 +15,13 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { GoogleButton } from './GoogleButton';
 
+// Seeded demo/guest account — replace with your actual demo credentials
+const DEMO_EMAIL = 'demo@example.com';
+const DEMO_PASSWORD = '12345678A';
+
 export default function LoginForm() {
   const { mutate, isPending } = useLogin();
+  const [mode, setMode] = useState<'manual' | 'demo' | null>(null);
 
   const form = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
@@ -28,6 +33,18 @@ export default function LoginForm() {
 
   const onSubmit = (data: LoginInput) => {
     mutate(data);
+  };
+
+  const handleManualSubmit = (data: LoginInput) => {
+    setMode('manual');
+    onSubmit(data);
+  };
+
+  const handleDemoLogin = () => {
+    setMode('demo');
+    form.setValue('email', DEMO_EMAIL, { shouldValidate: true });
+    form.setValue('password', DEMO_PASSWORD, { shouldValidate: true });
+    onSubmit({ email: DEMO_EMAIL, password: DEMO_PASSWORD });
   };
 
   return (
@@ -42,7 +59,49 @@ export default function LoginForm() {
         </p>
       </div>
 
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      {/* Guest / Demo Entry Point */}
+      <div className="rounded-xl border border-dashed border-blue-300 bg-blue-50/60 p-4 dark:border-blue-900 dark:bg-blue-950/30">
+        <p className="text-sm font-medium text-neutral-700 dark:text-neutral-200">
+          Just here to preview?
+        </p>
+        <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
+          Skip sign-up and explore a live demo workspace instantly.
+        </p>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={handleDemoLogin}
+          disabled={isPending}
+          className="mt-3 w-full rounded-xl border-blue-300 py-5 font-semibold text-blue-700 hover:bg-blue-100 dark:border-blue-800 dark:text-blue-300 dark:hover:bg-blue-900/40"
+        >
+          {isPending && mode === 'demo' ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Loading demo...
+            </>
+          ) : (
+            <>
+              <Eye className="mr-2 h-4 w-4" />
+              Continue as Guest
+            </>
+          )}
+        </Button>
+      </div>
+
+      {/* Visual Divider */}
+      <div className="relative flex items-center justify-center">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-neutral-200 dark:border-neutral-800" />
+        </div>
+        <span className="relative bg-white dark:bg-neutral-950 px-3 text-xs uppercase tracking-wider text-neutral-400 select-none">
+          Or sign in manually
+        </span>
+      </div>
+
+      <form
+        onSubmit={form.handleSubmit(handleManualSubmit)}
+        className="space-y-4"
+      >
         {/* Email Field */}
         <Controller
           control={form.control}
@@ -107,7 +166,7 @@ export default function LoginForm() {
           disabled={isPending}
           className="w-full rounded-xl bg-blue-600 py-5 font-semibold text-white hover:bg-blue-500 transition-colors mt-2"
         >
-          {isPending ? (
+          {isPending && mode === 'manual' ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               Signing in...
